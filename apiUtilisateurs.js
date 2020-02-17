@@ -5,8 +5,8 @@ const utilisateur = require("./utilisateurs");
 const fs = require('fs');
 
 // Nous définissons ici les paramètres du serveur.
-const hostname = '192.168.2.80'; 
-const port = 3000; 
+const hostname = '127.0.0.1'; 
+const port = 5000; 
 const app = express(); 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -18,8 +18,8 @@ const optionsMongo = {
     useFindAndModify: false,
     useUnifiedTopology : true
   };
-const uriMongo = "mongodb+srv://Nicolas:kopqsd@juxta-hfkgw.mongodb.net/test?retryWrites=true&w=majority";
-
+//const uriMongo = "mongodb+srv://Nicolas:kopqsd@juxta-hfkgw.mongodb.net/test?retryWrites=true&w=majority";
+const uriMongo = "mongodb+srv://adm_jez:jr01vl32mo@clustertest-jcbya.mongodb.net/test?retryWrites=true&w=majority";
 //Connexion à la base de donnée
 mongoose
   .connect(uriMongo,optionsMongo)
@@ -92,7 +92,7 @@ myRouter.route('/secret')
 app.use(myRouter);
 
 // Démarrer le serveur 
-app.listen(port, hostname, function(){
-	console.log("Mon API utilisateur fonctionne sur http://"+ hostname +":"+port+"\n"); 
+app.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
 });
 
