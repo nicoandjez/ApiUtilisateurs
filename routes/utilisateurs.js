@@ -1,11 +1,16 @@
-// description de la route ./utilisateurs appelée dans apiUtilisateurs.js
-
+// JBA description de la route ./utilisateurs appelée dans apiUtilisateurs.js
+// déclaration du super objet mongoose
 const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+
+//JBA déclaration de la super route à renvoyer à la fin
 const router = require('express').Router();
+//JBA appel du model utilisateur
 let utilisateur = require('../models/utilisateurs.model');
 
+//JBA on donne un nom à la route pour quelle soit parlante 
+//JBA ajouter un user route = ./utilisateurs/add
 router.route('/add')
     .post(function (req, res) {
         //utilisateur.ajouteUtilisateur(req, res);
@@ -27,7 +32,7 @@ router.route('/add')
         })
         //**************
     });
-
+//JBA lister tous les utilisateurs route = ./utilisateurs/list
 router.route('/list')
     .get(function (req, res) {
         utilisateur.find()
@@ -36,7 +41,9 @@ router.route('/list')
     })
 ;
 
-
+//JBA agir sur un utilisateur en utilisant son id route = ./utilisateurs/id/
+// paramètre :utilisateur_id
+// appel des méthodes findById, save, deleteOne
 router.route('/id/:utilisateur_id')
     .get(function (req, res) {
         //utilisateur.getUtilisateur(req, res)
@@ -65,19 +72,17 @@ router.route('/id/:utilisateur_id')
         });
     })
     .delete(function (req, res) {
-        //deleteUtilisateur
-        var tempUserName ;
+        //remplacement de la fonction remove par deleteOne. remove etant dépréciée
         utilisateur.findById(req.params.utilisateur_id, function (err, utilisateur) {
             if (err) res.send(err);
-            tempUserName = req.body.nom;
+            tempUserName = utilisateur.nom;
+            utilisateur.deleteOne({ _id: req.params.utilisateur_id }, function (err, utilisateur) {
+                if (err) {
+                    res.send(err);
+                }
+                res.json({ message: "Bravo, utilisateur " + tempUserName + " supprimé" });
+            }); 
         });
-        
-        utilisateur.deleteOne({ _id: req.params.utilisateur_id }, function (err, utilisateur) {
-            if (err) {
-                res.send(err);
-            }
-            res.json({ message: "Bravo, utilisateur supprimé", "nom": tempUserName });
-        }); 
     });
 /*
 router.route('/jwt')
