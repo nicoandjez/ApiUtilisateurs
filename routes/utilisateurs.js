@@ -1,89 +1,102 @@
-// JBA description de la route ./utilisateurs appelée dans apiUtilisateurs.js
-// déclaration du super objet mongoose
+// JBA description de la route ./utilisateurs appelï¿½e dans apiUtilisateurs.js
+// dï¿½claration du super objet mongoose
 const mongoose = require("mongoose");
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
-//JBA déclaration de la super route à renvoyer à la fin
-const router = require('express').Router();
+//JBA dï¿½claration de la super route ï¿½ renvoyer ï¿½ la fin
+const router = require("express").Router();
 //JBA appel du model utilisateur
-let utilisateur = require('../models/utilisateurs.model');
+let utilisateur = require("../models/utilisateurs.model");
 
-//JBA on donne un nom à la route pour quelle soit parlante 
+//JBA on donne un nom ï¿½ la route pour quelle soit parlante
 //JBA ajouter un user route = ./utilisateurs/add
-router.route('/add')
-    .post(function (req, res) {
-        //utilisateur.ajouteUtilisateur(req, res);
+router.route("/add").post(function(req, res) {
+  //utilisateur.ajouteUtilisateur(req, res);
 
-        //********************
-        var monUtilisateur = new utilisateur();
-        monUtilisateur.nom = req.body.nom;
-        monUtilisateur.prenom = req.body.prenom;
-        monUtilisateur.email = req.body.email;
-        monUtilisateur.login = req.body.login;
-        monUtilisateur.password = req.body.password;
-        monUtilisateur.utf = req.body.utf;
+  //********************
+  var monUtilisateur = new utilisateur();
+  monUtilisateur.nom = req.body.nom;
+  monUtilisateur.prenom = req.body.prenom;
+  monUtilisateur.email = req.body.email;
+  monUtilisateur.login = req.body.login;
+  monUtilisateur.password = req.body.password;
+  monUtilisateur.utf = req.body.utf;
 
-        monUtilisateur.save(function (err) {
-            if (err) {
-                res.send(err);
-            }
-            res.send({ message: 'Bravo, l\'utilisateur  est maintenant stockée en base de données', "id": monUtilisateur.id });
-        })
-        //**************
+  monUtilisateur.save(function(err) {
+    if (err) {
+      res.send(err);
+    }
+    res.send({
+      message:
+        "Bravo, l'utilisateur  est maintenant stockï¿½e en base de donnï¿½es",
+      id: monUtilisateur.id
     });
-//JBA lister tous les utilisateurs route = ./utilisateurs/list
-router.route('/list')
-    .get(function (req, res) {
-        utilisateur.find()
-            .then(utilisateurs => res.json(utilisateurs))
-            .catch(err => res.status(400).json('Error: ' + err));
-    })
-;
+  });
+  //**************
+});
+////JBA lister tous les utilisateurs route = ./utilisateurs/list
+//!NIE on n'utilise pas List pour lister
+//
+router.route("/").get(function(req, res) {
+  utilisateur
+    .find()
+    .then(utilisateurs => res.json(utilisateurs))
+    .catch(err => res.status(400).json("Error: " + err));
+});
 
 //JBA agir sur un utilisateur en utilisant son id route = ./utilisateurs/id/
-// paramètre :utilisateur_id
-// appel des méthodes findById, save, deleteOne
-router.route('/id/:utilisateur_id')
-    .get(function (req, res) {
-        //utilisateur.getUtilisateur(req, res)
-        utilisateur.findById(req.params.utilisateur_id, function (err, utilisateur) {
-            if (err)
-                res.send(err);
-            res.json(utilisateur);
-        });
-    })
-    .put(function (req, res) {
-        //utilisateur.UpdateUtilisateur(req, res)
-        utilisateur.findById(req.params.utilisateur_id, function (err, utilisateur) {
-            if (err) res.send(err);
-            utilisateur.nom = req.body.nom;
-            utilisateur.prenom = req.body.prenom;
-            utilisateur.email = req.body.email;
-            utilisateur.login = req.body.login;
-            utilisateur.password = req.body.password;
-            utilisateur.utf = req.body.utf;
-            utilisateur.save(function (err) {
-                if (err) {
-                    res.send(err);
-                }
-                res.send({ message: 'Bravo, l\'utilisateur  est mis à jour', "id": utilisateur.id });
-            })
-        });
-    })
-    .delete(function (req, res) {
-        //remplacement de la fonction remove par deleteOne. remove etant dépréciée
-        utilisateur.findById(req.params.utilisateur_id, function (err, utilisateur) {
-            if (err) res.send(err);
-            tempUserName = utilisateur.nom;
-            utilisateur.deleteOne({ _id: req.params.utilisateur_id }, function (err, utilisateur) {
-                if (err) {
-                    res.send(err);
-                }
-                res.json({ message: "Bravo, utilisateur " + tempUserName + " supprimé" });
-            }); 
-        });
+// paramï¿½tre :utilisateur_id
+// appel des mï¿½thodes findById, save, deleteOne
+//NIE On n'utilise pas add, POST sert Ã  Ã§a
+router
+  .route("/:utilisateur_id")
+  .get(function(req, res) {
+    //utilisateur.getUtilisateur(req, res)
+    utilisateur.findById(req.params.utilisateur_id, function(err, utilisateur) {
+      if (err) res.send(err);
+      res.json(utilisateur);
     });
+  })
+  .put(function(req, res) {
+    //utilisateur.UpdateUtilisateur(req, res)
+    utilisateur.findById(req.params.utilisateur_id, function(err, utilisateur) {
+      if (err) res.send(err);
+      utilisateur.nom = req.body.nom;
+      utilisateur.prenom = req.body.prenom;
+      utilisateur.email = req.body.email;
+      utilisateur.login = req.body.login;
+      utilisateur.password = req.body.password;
+      utilisateur.utf = req.body.utf;
+      utilisateur.save(function(err) {
+        if (err) {
+          res.send(err);
+        }
+        res.send({
+          message: "Bravo, l'utilisateur  est mis ï¿½ jour",
+          id: utilisateur.id
+        });
+      });
+    });
+  })
+  .delete(function(req, res) {
+    //remplacement de la fonction remove par deleteOne. remove etant dï¿½prï¿½ciï¿½e
+    utilisateur.findById(req.params.utilisateur_id, function(err, utilisateur) {
+      if (err) res.send(err);
+      tempUserName = utilisateur.nom;
+      utilisateur.deleteOne({ _id: req.params.utilisateur_id }, function(
+        err,
+        utilisateur
+      ) {
+        if (err) {
+          res.send(err);
+        }
+        res.json({
+          message: "Bravo, utilisateur " + tempUserName + " supprimï¿½"
+        });
+      });
+    });
+  });
 /*
 router.route('/jwt')
     .get(function (req, res) {
